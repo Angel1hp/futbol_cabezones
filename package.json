@@ -1,0 +1,22 @@
+{
+  "name": "futbol-cabezones-online",
+  "version": "1.0.0",
+  "description": "Head Soccer Online multiplayer browser game",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build -w @futbol-cabezones/shared && npm run build -w @futbol-cabezones/server && npm run build -w @futbol-cabezones/client",
+    "start": "npm run start --workspace=server",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "author": "Antigravity",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "jimp": "^0.22.12"
+  }
+}

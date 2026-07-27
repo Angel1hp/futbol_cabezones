@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Head Soccer Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Burbank';
+      src: url('/assets/fonts/burbankbigcondensed_bold.otf') format('opentype');
+      font-weight: bold;
+      font-style: normal;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #111;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: 'Inter', sans-serif;
+    }
+    #game-container {
+      position: relative;
+    }
+    #ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Let clicks pass through to Phaser by default */
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <!-- Phaser injects canvas here -->
+    <div id="ui-layer"></div>
+  </div>
+  <!-- Hidden element to force font loading -->
+  <div style="font-family: 'Burbank'; visibility: hidden; position: absolute; width: 0; height: 0;">.</div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
