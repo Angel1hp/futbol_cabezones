@@ -11,7 +11,7 @@ export class GameRoom {
   
   private engine!: PhysicsEngine;
   private gameLoopInterval: NodeJS.Timeout | null = null;
-  private TICK_RATE = 60;
+  private TICK_RATE = 30; // Reducido para evitar congestión de red
   
   private currentTick = 0;
   private latestInputs: { [role: string]: PlayerInput } = {};

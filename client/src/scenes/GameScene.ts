@@ -18,6 +18,7 @@ export class GameScene extends Phaser.Scene {
   };
 
   private inputSequence = 0;
+  private lastInputJSON = '';
   
   // Interpolation targets
   private serverSnapshot: MatchSnapshot | null = null;
@@ -229,8 +230,12 @@ export class GameScene extends Phaser.Scene {
       kick: Phaser.Input.Keyboard.JustDown(this.keys.space)
     };
 
-    // 2. Enviar Input al Servidor
-    socket.emit('game:player_input', input);
+    // 2. Enviar Input al Servidor SOLAMENTE si hubo cambios
+    const currentState = JSON.stringify({ left: input.left, right: input.right, jump: input.jump, kick: input.kick });
+    if (currentState !== this.lastInputJSON) {
+      socket.emit('game:player_input', input);
+      this.lastInputJSON = currentState;
+    }
 
     // 3. Predicción / Interpolación visual
     const lerpFactor = 0.3; // Ajustable
