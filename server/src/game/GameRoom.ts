@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { PhysicsEngine, GAME_CONFIG } from '@futbol-cabezones/shared';
+import { PhysicsEngine, GAME_CONFIG, PlayerInput, PlayerController } from '@futbol-cabezones/shared';
 import { supabaseAdmin } from '../config/supabaseAdmin';
 
 export class GameRoom {
@@ -14,7 +14,7 @@ export class GameRoom {
   private TICK_RATE = 60;
   
   private currentTick = 0;
-  private latestInputs: { [role: string]: any } = {};
+  private latestInputs: { [role: string]: PlayerInput } = {};
 
   public isRunning = false;
   private state: 'PLAYING' | 'GOAL_SCORED' | 'FINISHED' = 'PLAYING';
@@ -49,7 +49,7 @@ export class GameRoom {
     }
   }
 
-  public handleInput(socketId: string, inputData: any) {
+  public handleInput(socketId: string, inputData: PlayerInput) {
     const role = this.players[socketId];
     if (role) {
       this.latestInputs[role] = inputData;
@@ -90,7 +90,7 @@ export class GameRoom {
       const snapshot = {
         tick: this.currentTick,
         time: Math.max(0, Math.ceil(this.remainingTime)),
-        players: this.engine.players.map(p => ({
+        players: this.engine.players.map((p: PlayerController) => ({
           id: p.id,
           x: p.x,
           y: p.y,
@@ -153,8 +153,8 @@ export class GameRoom {
       console.log(`[GameRoom] Guardada partida en DB: ${matchData.id}`);
       // Nota: Falta vincular UUIDs reales de usuarios en this.players para insertar en match_players.
       // Se completará cuando los usuarios inicien sesión correctamente.
-    } catch (err: any) {
-      console.error('[GameRoom] Error guardando partida:', err.message);
+    } catch (err: unknown) {
+      console.error('[GameRoom] Error guardando partida:', err instanceof Error ? err.message : String(err));
     }
   }
 

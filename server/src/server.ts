@@ -1,7 +1,7 @@
 import http from 'http';
 import { Server } from 'socket.io';
 import app from './app';
-import { ClientToServerEvents, ServerToClientEvents } from '@futbol-cabezones/shared';
+import { ClientToServerEvents, ServerToClientEvents, PlayerInput } from '@futbol-cabezones/shared';
 
 const PORT = process.env.PORT || 3000;
 const httpServer = http.createServer(app);
@@ -15,7 +15,7 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
 
 import { GameRoomManager } from './game/GameRoomManager';
 
-const roomManager = new GameRoomManager(io as any); // Type cast until we align all strict types perfectly if needed
+const roomManager = new GameRoomManager(io);
 
 io.on('connection', (socket) => {
   console.log(`Player connected: ${socket.id}`);
@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('game:player_input', (data) => {
+  socket.on('game:player_input', (data: PlayerInput) => {
     // Buscar la sala de este socket (ignorando la sala del propio socket.id)
     const roomIds = Array.from(socket.rooms).filter(id => id !== socket.id);
     if (roomIds.length > 0) {

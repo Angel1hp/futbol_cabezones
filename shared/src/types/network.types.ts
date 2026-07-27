@@ -35,7 +35,7 @@ export interface MatchSnapshot {
 
 export interface ClientToServerEvents {
   "lobby:create_room": (data: { isPrivate: boolean }) => void;
-  "lobby:join_room": (data: { roomId: string; spriteKey?: string }) => void;
+  "lobby:join_room": (data: { roomId: string; spriteKey?: string; ballKey?: string }) => void;
   "lobby:quick_match": () => void;
   "character:select": (data: { characterId: string }) => void;
   "game:player_input": (data: PlayerInput) => void;
@@ -43,7 +43,7 @@ export interface ClientToServerEvents {
 
 export interface ServerToClientEvents {
   "auth:success": (data: { userId: string; username: string }) => void;
-  "lobby:room_updated": (data: { roomId: string; players: any[] }) => void;
+  "lobby:room_updated": (data: { roomId: string; players: { id: string; sprite: string }[] }) => void;
   "game:countdown": (data: {
     seconds: number;
     role?: string;
