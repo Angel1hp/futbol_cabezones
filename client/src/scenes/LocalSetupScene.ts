@@ -250,14 +250,14 @@ export class LocalSetupScene extends Phaser.Scene {
   
   private getKeyName(keyCode: number): string {
     for (let key in Phaser.Input.Keyboard.KeyCodes) {
-      if ((Phaser.Input.Keyboard.KeyCodes as any)[key] === keyCode) {
+      if ((Phaser.Input.Keyboard.KeyCodes as Record<string, number>)[key] === keyCode) {
         return key;
       }
     }
     return String.fromCharCode(keyCode);
   }
 
-  private getKeyNames(keys: any) {
+  private getKeyNames(keys: { up: number, left: number, right: number, kick: number }) {
     return {
       up: this.getKeyName(keys.up),
       left: this.getKeyName(keys.left),

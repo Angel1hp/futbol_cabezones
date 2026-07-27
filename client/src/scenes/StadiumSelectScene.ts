@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 export class StadiumSelectScene extends Phaser.Scene {
-  private prevData: any;
+  private prevData!: Record<string, unknown>;
   private bigBg!: Phaser.GameObjects.Image;
   private bigBgVideo!: Phaser.GameObjects.Video;
   private stadiumNameText!: Phaser.GameObjects.Text;
@@ -10,7 +10,7 @@ export class StadiumSelectScene extends Phaser.Scene {
     super({ key: 'StadiumSelectScene' });
   }
 
-  init(data: any) {
+  init(data: Record<string, any>) {
     this.prevData = data;
   }
 

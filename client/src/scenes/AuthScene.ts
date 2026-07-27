@@ -38,8 +38,8 @@ export class AuthScene extends Phaser.Scene {
           if (error) throw error;
           console.log('Logged in successfully', data);
           this.finishAuth();
-        } catch (err: any) {
-          alert('Error al iniciar sesión: ' + err.message);
+        } catch (err: unknown) {
+          alert('Error al iniciar sesión: ' + (err instanceof Error ? err.message : String(err)));
         }
       },
       async (email, password, username) => {
@@ -52,8 +52,8 @@ export class AuthScene extends Phaser.Scene {
           });
           if (error) throw error;
           alert('Registro exitoso. ¡Inicia sesión para continuar!');
-        } catch (err: any) {
-          alert('Error al registrarse: ' + err.message);
+        } catch (err: unknown) {
+          alert('Error al registrarse: ' + (err instanceof Error ? err.message : String(err)));
         }
       },
       () => {

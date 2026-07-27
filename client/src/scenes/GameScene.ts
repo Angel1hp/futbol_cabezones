@@ -34,19 +34,18 @@ export class GameScene extends Phaser.Scene {
     super({ key: 'GameScene' });
   }
 
-  init(data: any) {
+  init(data: { roomId?: string; role?: string; players?: { id: string; sprite: string }[]; ballKey?: string; stadiumKey?: string }) {
     this.playerSprites = {};
     this.targets = {};
     this.serverSnapshot = null;
     this.inputSequence = 0;
-
-    this.myRole = data?.role || 'p1';
-    this.matchPlayers = data?.players || [
+    this.myRole = data.role || 'p1';
+    this.matchPlayers = data.players || [
       { id: 'p1', sprite: 'char_messi' },
       { id: 'p2', sprite: 'char_mbappe' }
     ];
-    this.ballKey = data?.ballKey || 'ball';
-    this.stadiumKey = data?.stadiumKey || 'bg_stadium';
+    this.stadiumKey = data.stadiumKey || 'bg_stadium';
+    this.ballKey = data.ballKey || 'ball';
   }
 
   create() {

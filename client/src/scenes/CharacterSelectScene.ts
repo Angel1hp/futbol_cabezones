@@ -4,7 +4,7 @@ export class CharacterSelectScene extends Phaser.Scene {
   private hoveredNameText!: Phaser.GameObjects.Text;
   private bigSprite!: Phaser.GameObjects.Sprite;
   private statBars: { [key: string]: Phaser.GameObjects.Graphics } = {};
-  private matchConfig: any = null;
+  private matchConfig: Record<string, unknown> | null = null;
   private currentSelectionIndex = 0;
   private selectedSprites: string[] = [];
   private mode: string = 'online';
@@ -14,7 +14,7 @@ export class CharacterSelectScene extends Phaser.Scene {
     super({ key: 'CharacterSelectScene' });
   }
 
-  init(data: any) {
+  init(data: { mode?: string, matchConfig?: Record<string, unknown> | null }) {
     this.mode = data.mode || 'online';
     this.matchConfig = data.matchConfig || null;
     this.currentSelectionIndex = 0;
@@ -100,7 +100,7 @@ export class CharacterSelectScene extends Phaser.Scene {
     renderBar(30, 'JUMP');
     renderBar(60, 'POWER');
 
-    const updatePanel = (char: any) => {
+    const updatePanel = (char: { id: string; name: string; sprite: string; color: number; stats: Record<string, number> }) => {
       this.bigSprite.setTexture(char.sprite);
       this.hoveredNameText.setText(char.name.toUpperCase());
       
@@ -240,13 +240,13 @@ export class CharacterSelectScene extends Phaser.Scene {
         gridContainer.y = maxScrollY * scrollPercent;
       };
 
-      this.input.on('drag', (pointer: any, gameObject: any, dragX: number, dragY: number) => {
+      this.input.on('drag', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
         if (gameObject === thumbZone) {
           updateScroll(pointer.y - thumbHeight / 2);
         }
       });
 
-      this.input.on('wheel', (pointer: any, gameObjects: any, deltaX: number, deltaY: number, deltaZ: number) => {
+      this.input.on('wheel', (pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[], deltaX: number, deltaY: number, deltaZ: number) => {
         if (pointer.x < width - 250) {
           updateScroll(currentThumbY + deltaY * 0.5);
         }

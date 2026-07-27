@@ -1,14 +1,14 @@
 import Phaser from 'phaser';
 
 export class BallSelectScene extends Phaser.Scene {
-  private prevData: any;
+  private prevData!: Record<string, unknown>;
   private ballNameText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({ key: 'BallSelectScene' });
   }
 
-  init(data: any) {
+  init(data: Record<string, unknown>) {
     this.prevData = data;
   }
 

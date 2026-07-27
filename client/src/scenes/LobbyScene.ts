@@ -11,7 +11,7 @@ export class LobbyScene extends Phaser.Scene {
   private spriteKey!: string;
   private ballKey!: string;
 
-  init(data: any) {
+  init(data: { spriteKey?: string, ballKey?: string }) {
     this.spriteKey = data?.spriteKey || 'char_messi';
     this.ballKey = data?.ballKey || 'ball';
   }
@@ -47,14 +47,14 @@ export class LobbyScene extends Phaser.Scene {
       });
   }
 
-  private joinRoom(socket: any) {
+  private joinRoom(socket: import('socket.io-client').Socket) {
     this.statusText.setText('BUSCANDO PARTIDA...\n(Esperando rival)');
     
     // Hardcoded room for now to facilitate Phase 4 testing
     const roomId = 'test_room_1';
     socket.emit('lobby:join_room', { roomId, spriteKey: this.spriteKey, ballKey: this.ballKey });
 
-    socket.on('game:countdown', (data: { seconds: number, role?: string, players?: any[], ballKey?: string }) => {
+    socket.on('game:countdown', (data: { seconds: number, role?: string, players?: { id: string, sprite: string }[], ballKey?: string }) => {
       this.statusText.setText(`¡RIVAL ENCONTRADO!\nEl partido empieza en ${data.seconds}...`);
       
       this.time.delayedCall(data.seconds * 1000, () => {

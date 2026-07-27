@@ -8,9 +8,9 @@ export class LocalGameScene extends Phaser.Scene {
   private playerSprites: Phaser.GameObjects.Sprite[] = [];
   private ballSprite!: Phaser.GameObjects.Sprite;
 
-  private matchConfig: any;
+  private matchConfig!: Record<string, any>;
   private selectedSprites: string[] = [];
-  private playerKeys: any[] = [];
+  private playerKeys: (Record<string, Phaser.Input.Keyboard.Key> | null)[] = [];
 
   private stadiumKey: string = 'bg_stadium';
   private ballKey: string = 'ball';
@@ -29,7 +29,7 @@ export class LocalGameScene extends Phaser.Scene {
     super({ key: 'LocalGameScene' });
   }
 
-  init(data: any) {
+  init(data: Record<string, any>) {
     this.playerSprites = [];
     this.playerKeys = [];
     this.scoreP1 = 0;
@@ -152,12 +152,13 @@ export class LocalGameScene extends Phaser.Scene {
       // Si hubo gol, solo actualizamos las físicas sin input para que la pelota termine de caer
       this.engine.update(dt, {});
     } else {
-      const inputs: any = {};
+      const inputs: Record<string, any> = {};
       
       this.engine.players.forEach((p, i) => {
         const slotConfig = this.matchConfig.slots[i];
         if (slotConfig.type === 'HUMAN') {
           const pk = this.playerKeys[i];
+          if (!pk) return;
           inputs[p.id] = {
             sequence: 0,
             left: pk.left.isDown,

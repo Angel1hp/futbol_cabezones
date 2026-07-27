@@ -1,4 +1,5 @@
 import { GAME_CONFIG } from '../constants/gameConfig';
+import { PlayerInput } from '../types/network.types';
 import { clamp, Circle, AABB } from './math';
 
 export class PlayerController {
@@ -73,7 +74,7 @@ export class PlayerController {
     };
   }
 
-  public applyInput(input: any, dt: number) {
+  public applyInput(input: PlayerInput, dt: number) {
     if (!input) return;
 
     // Movement

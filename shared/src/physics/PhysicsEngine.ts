@@ -3,6 +3,7 @@ import { PlayerController } from './PlayerController';
 import { BallPhysics } from './BallPhysics';
 import { GoalDetector } from './GoalDetector';
 import { CollisionManager } from './CollisionManager';
+import { PlayerInput } from '../types/network.types';
 
 export interface PlayerPhysics {
   id: string;
@@ -62,7 +63,7 @@ export class PhysicsEngine {
     this.collisionManager = new CollisionManager();
   }
 
-  public update(dt: number, inputs: { [id: string]: any }): string | null {
+  public update(dt: number, inputs: { [id: string]: PlayerInput }): string | null {
     const paddingX = GAME_CONFIG.GOAL_WIDTH * (25 / 140);
     const leftLimit = GAME_CONFIG.GOAL_WIDTH - paddingX;
     const rightLimit = GAME_CONFIG.FIELD_WIDTH - GAME_CONFIG.GOAL_WIDTH + paddingX;
