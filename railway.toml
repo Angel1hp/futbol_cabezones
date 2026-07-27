@@ -1,0 +1,7 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm install && npm run build -w @futbol-cabezones/shared && npm run build -w @futbol-cabezones/server"
+
+[deploy]
+startCommand = "npm start -w @futbol-cabezones/server"
+restartPolicyType = "ON_FAILURE"

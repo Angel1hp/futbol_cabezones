@@ -2,6 +2,7 @@ services:
   - type: web
     name: futbol-cabezones-server
     env: node
+    plan: free
     buildCommand: npm install && npm run build -w @futbol-cabezones/shared && npm run build -w @futbol-cabezones/server
     startCommand: npm start -w @futbol-cabezones/server
     envVars:
@@ -13,3 +14,4 @@ services:
         sync: false
       - key: FRONTEND_URL
         value: "https://futbol-cabezones.vercel.app"
+
