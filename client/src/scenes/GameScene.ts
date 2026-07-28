@@ -242,13 +242,31 @@ export class GameScene extends Phaser.Scene {
 
     Object.keys(this.targets).forEach(id => {
       if (this.playerSprites[id]) {
-        this.playerSprites[id].x += (this.targets[id].x - this.playerSprites[id].x) * lerpFactor;
-        this.playerSprites[id].y += (this.targets[id].y - this.playerSprites[id].y) * lerpFactor;
-        
-        // Flip visual
-        const vx = this.targets[id].vx;
-        if (vx < 0) this.playerSprites[id].setFlipX(true);
-        else if (vx > 0) this.playerSprites[id].setFlipX(false);
+        if (id === this.myRole) {
+          // Predicción local (Client-Side Prediction simple) para respuesta instantánea
+          const speed = GAME_CONFIG.BASE_SPEED * (delta / 1000);
+          if (this.keys.a.isDown) {
+            this.playerSprites[id].x -= speed;
+            this.playerSprites[id].setFlipX(true);
+          }
+          if (this.keys.d.isDown) {
+            this.playerSprites[id].x += speed;
+            this.playerSprites[id].setFlipX(false);
+          }
+          
+          // Corrección suave hacia la posición del servidor (Rubber-banding mitigation)
+          this.playerSprites[id].x += (this.targets[id].x - this.playerSprites[id].x) * 0.1;
+          this.playerSprites[id].y += (this.targets[id].y - this.playerSprites[id].y) * 0.3; 
+        } else {
+          // Rivales: Interpolación estricta hacia el snapshot del servidor
+          this.playerSprites[id].x += (this.targets[id].x - this.playerSprites[id].x) * lerpFactor;
+          this.playerSprites[id].y += (this.targets[id].y - this.playerSprites[id].y) * lerpFactor;
+          
+          // Flip visual para rivales
+          const vx = this.targets[id].vx;
+          if (vx < 0) this.playerSprites[id].setFlipX(true);
+          else if (vx > 0) this.playerSprites[id].setFlipX(false);
+        }
       }
     });
 
