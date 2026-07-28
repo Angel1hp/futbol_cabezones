@@ -22,10 +22,13 @@ export class LobbyScene extends Phaser.Scene {
 
     this.add.rectangle(width / 2, height / 2, width, height, 0x121224);
 
-    this.statusText = this.add.text(width / 2, height / 2, 'CONECTANDO AL SERVIDOR...', {
-      font: '600 24px Inter, monospace',
-      color: '#00ff88'
-    }).setOrigin(0.5);
+    const username = (this.registry.get('username') || 'Invitado').toUpperCase();
+
+    this.statusText = this.add.text(width / 2, height / 2, `BUSCANDO PARTIDA PARA:\n${username}`, {
+      font: '32px "Burbank", monospace',
+      color: '#00ff88',
+      align: 'center'
+    }).setOrigin(0.5).setStroke('#000000', 4);
 
     // Get socket and set up listeners
     const socket = socketService.getSocket();
@@ -48,14 +51,21 @@ export class LobbyScene extends Phaser.Scene {
   }
 
   private joinRoom(socket: import('socket.io-client').Socket) {
-    this.statusText.setText('BUSCANDO PARTIDA...\n(Esperando rival)');
+    const username = this.registry.get('username') || 'Invitado';
     
     // Hardcoded room for now to facilitate Phase 4 testing
     const roomId = 'test_room_1';
-    socket.emit('lobby:join_room', { roomId, spriteKey: this.spriteKey, ballKey: this.ballKey });
+    socket.emit('lobby:join_room', { roomId, spriteKey: this.spriteKey, ballKey: this.ballKey, username });
 
-    socket.on('game:countdown', (data: { seconds: number, role?: string, players?: { id: string, sprite: string }[], ballKey?: string }) => {
-      this.statusText.setText(`¡RIVAL ENCONTRADO!\nEl partido empieza en ${data.seconds}...`);
+    socket.on('game:countdown', (data: { seconds: number, role?: string, players?: { id: string, sprite: string, username?: string }[], ballKey?: string }) => {
+      // Encontrar al rival
+      const myId = data.role;
+      const opponent = data.players?.find(p => p.id !== myId);
+      const opponentName = (opponent?.username || opponent?.sprite?.replace('char_', '') || 'Rival').toUpperCase();
+      const myName = username.toUpperCase();
+
+      this.statusText.setText(`¡RIVAL ENCONTRADO!\n${myName} VS ${opponentName}\nEmpezando en ${data.seconds}...`);
+      this.statusText.setColor('#ffea00');
       
       this.time.delayedCall(data.seconds * 1000, () => {
         socket.off('game:countdown');

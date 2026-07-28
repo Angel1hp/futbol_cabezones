@@ -21,10 +21,10 @@ io.on('connection', (socket) => {
   console.log(`Player connected: ${socket.id}`);
 
   // Quick Match / Join Room logic
-  socket.on('lobby:join_room', (data: { roomId: string, spriteKey?: string, ballKey?: string }) => {
+  socket.on('lobby:join_room', (data: { roomId: string, spriteKey?: string, ballKey?: string, username?: string }) => {
     socket.join(data.roomId);
     const room = roomManager.getOrCreateRoom(data.roomId);
-    room.addPlayer(socket.id, data.spriteKey);
+    room.addPlayer(socket.id, data.spriteKey, data.username);
     
     // El creador define la pelota
     if (room.players[socket.id] === 'p1' && data.ballKey) {
@@ -38,7 +38,8 @@ io.on('connection', (socket) => {
       
       const playersList = Object.keys(room.players).map(sId => ({
          id: room.players[sId],
-         sprite: room.sprites[room.players[sId]]
+         sprite: room.sprites[room.players[sId]],
+         username: room.usernames[room.players[sId]]
       }));
 
       Object.keys(room.players).forEach(sId => {

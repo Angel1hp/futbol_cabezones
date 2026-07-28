@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { supabase } from '../services/supabase.service';
 
 export class MainMenuScene extends Phaser.Scene {
   constructor() {
@@ -11,6 +12,17 @@ export class MainMenuScene extends Phaser.Scene {
 
     // Iniciar música de fondo de los menús
     let menuMusic = this.sound.get('music') as Phaser.Sound.BaseSound;
+
+    // Obtener y mostrar nombre de usuario
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      const username = user?.user_metadata?.username || 'Invitado';
+      this.registry.set('username', username);
+      
+      this.add.text(width - 30, 30, `👤 ${username.toUpperCase()}`, {
+        font: '24px "Burbank", monospace',
+        color: '#00ff88'
+      }).setOrigin(1, 0).setStroke('#000000', 4).setShadow(2, 2, '#000000', 0, true, false);
+    });
     if (!menuMusic) {
       menuMusic = this.sound.add('music', { loop: true, volume: 0.4 });
     }

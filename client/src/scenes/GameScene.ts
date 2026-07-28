@@ -26,7 +26,7 @@ export class GameScene extends Phaser.Scene {
   private targetBall = { x: 0, y: 0 };
 
   private myRole!: string;
-  private matchPlayers: { id: string, sprite: string }[] = [];
+  private matchPlayers: { id: string, sprite: string, username?: string }[] = [];
   private ballKey: string = 'ball';
   private stadiumKey: string = 'bg_stadium';
   private bgMusic!: Phaser.Sound.BaseSound;
@@ -35,7 +35,7 @@ export class GameScene extends Phaser.Scene {
     super({ key: 'GameScene' });
   }
 
-  init(data: { roomId?: string; role?: string; players?: { id: string; sprite: string }[]; ballKey?: string; stadiumKey?: string }) {
+  init(data: { roomId?: string; role?: string; players?: { id: string; sprite: string; username?: string }[]; ballKey?: string; stadiumKey?: string }) {
     this.playerSprites = {};
     this.targets = {};
     this.serverSnapshot = null;
@@ -150,9 +150,9 @@ export class GameScene extends Phaser.Scene {
       this.cameras.main.shake(500, 0.02);
 
       const scorerPlayer = this.matchPlayers.find(p => p.id === data.scorerId);
-      const name = scorerPlayer ? scorerPlayer.sprite.replace('char_', '') : 'Jugador';
+      const name = (scorerPlayer?.username || scorerPlayer?.sprite?.replace('char_', '') || 'Jugador').toUpperCase();
       
-      const goalText = this.add.text(width / 2, height / 2, `¡GOL DE ${name.toUpperCase()}!`, {
+      const goalText = this.add.text(width / 2, height / 2, `¡GOL DE ${name}!`, {
         font: '900 80px Inter, sans-serif', color: '#ffcc00'
       }).setOrigin(0.5).setShadow(4, 4, '#000000', 0, true, true).setDepth(100);
 
@@ -178,7 +178,7 @@ export class GameScene extends Phaser.Scene {
       let winnerText = 'EMPATE';
       if (data.winnerId) {
          const winnerPlayer = this.matchPlayers.find(p => p.id === data.winnerId);
-         const winnerName = winnerPlayer ? winnerPlayer.sprite.replace('char_', '').toUpperCase() : data.winnerId.toUpperCase();
+         const winnerName = (winnerPlayer?.username || winnerPlayer?.sprite?.replace('char_', '') || data.winnerId).toUpperCase();
          winnerText = `GANA ${winnerName}`;
       }
 
@@ -318,8 +318,11 @@ export class GameScene extends Phaser.Scene {
     }).setOrigin(0.5).setShadow(0, 0, '#ff3366', 10, true, true).setStroke('#000000', 6);
 
     // Names
-    const p1Name = (this.matchPlayers.find(p => p.id === 'p1')?.sprite || 'char_messi').replace('char_', '').toUpperCase();
-    const p2Name = (this.matchPlayers.find(p => p.id === 'p2')?.sprite || 'char_mbappe').replace('char_', '').toUpperCase();
+    const p1 = this.matchPlayers.find(p => p.id === 'p1');
+    const p2 = this.matchPlayers.find(p => p.id === 'p2');
+    
+    const p1Name = (p1?.username || p1?.sprite?.replace('char_', '') || 'MESSI').toUpperCase();
+    const p2Name = (p2?.username || p2?.sprite?.replace('char_', '') || 'MBAPPE').toUpperCase();
 
     this.add.text(x - 140, y, p1Name, {
       font: '24px "Burbank", monospace',

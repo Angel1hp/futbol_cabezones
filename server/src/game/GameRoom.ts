@@ -6,6 +6,7 @@ export class GameRoom {
   public id: string;
   public players: { [socketId: string]: string } = {}; // socketId -> 'p1' | 'p2' | 'p3' | 'p4'
   public sprites: { [role: string]: string } = {};
+  public usernames: { [role: string]: string } = {};
   public ballKey: string = 'ball';
   private io: Server;
   
@@ -27,7 +28,7 @@ export class GameRoom {
     this.engine = new PhysicsEngine();
   }
 
-  public addPlayer(socketId: string, spriteKey?: string) {
+  public addPlayer(socketId: string, spriteKey?: string, username?: string) {
     if (!this.players[socketId]) {
       const assignedRoles = Object.values(this.players);
       let role = 'p1';
@@ -38,6 +39,7 @@ export class GameRoom {
       
       this.players[socketId] = role;
       if (spriteKey) this.sprites[role] = spriteKey;
+      if (username) this.usernames[role] = username;
     }
     return this.players[socketId];
   }
